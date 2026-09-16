@@ -1,4 +1,4 @@
-import { useTheme } from "@/context/ThemeContext";
+import { useTheme } from "@/hooks/useTheme.js";
 import { FaSun } from "react-icons/fa6";
 import { IoMoonOutline } from "react-icons/io5";
 
