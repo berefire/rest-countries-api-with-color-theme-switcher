@@ -1,9 +1,15 @@
-import { useState } from "react";
-import { IoSearchOutline } from "react-icons/io5";
+// src/components/SearchFilter/SearchFilter.jsx
+import { useEffect, useRef, useState } from "react";
+import { IoSearchOutline, IoChevronDownOutline } from "react-icons/io5";
+
+const REGIONS = ["Africa", "Americas", "Asia", "Europe", "Oceania"];
 
 function SearchFilter({ allCountries, setCountries }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [region, setRegion] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(-1);
+  const containerRef = useRef(null);
 
   function applyFilters(nextSearchTerm, nextRegion) {
     const filtered = allCountries.filter((country) => {
@@ -23,14 +29,69 @@ function SearchFilter({ allCountries, setCountries }) {
     applyFilters(value, region);
   }
 
-  function handleRegionChange(e) {
-    const value = e.target.value;
+  function selectRegion(value) {
     setRegion(value);
     applyFilters(searchTerm, value);
+    setIsOpen(false);
   }
 
+  useEffect(() => {
+    function handleClickOutside(e) {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setIsOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  function handleTriggerKeyDown(e) {
+    switch (e.key) {
+      case "ArrowDown":
+        e.preventDefault();
+        if (!isOpen) {
+          setIsOpen(true);
+          setActiveIndex(0);
+        } else {
+          setActiveIndex((prev) => (prev + 1) % REGIONS.length);
+        }
+        break;
+      case "ArrowUp":
+        e.preventDefault();
+        if (!isOpen) {
+          setIsOpen(true);
+          setActiveIndex(REGIONS.length - 1);
+        } else {
+          setActiveIndex(
+            (prev) => (prev - 1 + REGIONS.length) % REGIONS.length,
+          );
+        }
+        break;
+      case "Enter":
+      case " ":
+        e.preventDefault();
+        if (isOpen && activeIndex >= 0) {
+          selectRegion(REGIONS[activeIndex]);
+        } else {
+          setIsOpen((prev) => !prev);
+        }
+        break;
+      case "Escape":
+        setIsOpen(false);
+        break;
+      default:
+        break;
+    }
+  }
+
+  const activeOptionId =
+    isOpen && activeIndex >= 0
+      ? `region-option-${REGIONS[activeIndex]}`
+      : undefined;
+
   return (
-    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-10  md:gap-2 px-4 md:px-12 pbs-6 md:pbs-12 lg:px-20">
+    <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-10 md:gap-2 px-4 md:px-10.25 pt-6 md:pt-12 lg:px-20.25">
       <div className="relative w-full lg:max-w-120">
         <IoSearchOutline
           aria-hidden="true"
@@ -49,23 +110,60 @@ function SearchFilter({ allCountries, setCountries }) {
         />
       </div>
 
-      <div className="max-w-50 md:w-auto">
-        <label htmlFor="region-filter" className="sr-only">
-          Filter by region
-        </label>
-        <select
-          id="region-filter"
-          value={region}
-          onChange={handleRegionChange}
-          className="w-full md:w-56 px-6 py-3 rounded-sm shadow-md bg-white dark:bg-blue-900 dark:text-white focus-ring"
+      <div
+        ref={containerRef}
+        className="relative w-full md:w-fit md:min-w-50"
+        onBlur={(e) => {
+          if (!e.currentTarget.contains(e.relatedTarget)) {
+            setIsOpen(false);
+          }
+        }}
+      >
+        <button
+          type="button"
+          aria-haspopup="listbox"
+          aria-expanded={isOpen}
+          aria-controls="region-filter-listbox"
+          aria-activedescendant={activeOptionId}
+          aria-label={`Filter by region: ${region || "All"}`}
+          onClick={() => setIsOpen((prev) => !prev)}
+          onKeyDown={handleTriggerKeyDown}
+          className="w-full flex items-center justify-between gap-4 px-6 py-3 rounded-sm shadow-md bg-white dark:bg-blue-900 dark:text-white focus-ring"
         >
-          <option value="">Filter by Region</option>
-          <option value="Africa">Africa</option>
-          <option value="Americas">Americas</option>
-          <option value="Asia">Asia</option>
-          <option value="Europe">Europe</option>
-          <option value="Oceania">Oceania</option>
-        </select>
+          <span className="whitespace-nowrap">
+            {region || "Filter by Region"}
+          </span>
+          <IoChevronDownOutline
+            aria-hidden="true"
+            className={`size-5 text-gray-400 cursor-pointer transition-transform ${isOpen ? "rotate-180" : ""}`}
+          />
+        </button>
+
+        {isOpen && (
+          <ul
+            id="region-filter-listbox"
+            role="listbox"
+            aria-label="Filter by region"
+            className="absolute z-10 mt-2 w-full rounded-sm shadow-md bg-white dark:bg-blue-900 py-2"
+          >
+            {REGIONS.map((value, index) => (
+              <li
+                key={value}
+                id={`region-option-${value}`}
+                role="option"
+                aria-selected={region === value}
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => selectRegion(value)}
+                onMouseEnter={() => setActiveIndex(index)}
+                className={`px-6 py-2 cursor-pointer dark:text-white ${
+                  index === activeIndex ? "bg-gray-100 dark:bg-blue-800" : ""
+                }`}
+              >
+                {value}
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

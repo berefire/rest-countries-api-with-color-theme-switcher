@@ -30,8 +30,13 @@ export const SearchByName = {
 
 export const FilterByRegion = {
   play: async ({ args, canvas, userEvent }) => {
-    const regionSelect = canvas.getByLabelText("Filter by region");
-    await userEvent.selectOptions(regionSelect, "Europe");
+    const trigger = canvas.getByRole("button", { name: /filter by region/i });
+    await userEvent.click(trigger);
+
+    const option = canvas.getByRole("option", { name: "Europe" });
+    await userEvent.click(option);
+
+    await expect(trigger).toHaveTextContent("Europe");
 
     const lastCall = args.setCountries.mock.calls.at(-1)[0];
     await expect(lastCall).toEqual([sampleCountries[0], sampleCountries[1]]);
@@ -41,10 +46,12 @@ export const FilterByRegion = {
 export const SearchAndRegionCombined = {
   play: async ({ args, canvas, userEvent }) => {
     const searchInput = canvas.getByLabelText("Search for a country");
-    const regionSelect = canvas.getByLabelText("Filter by region");
-
     await userEvent.type(searchInput, "g");
-    await userEvent.selectOptions(regionSelect, "Europe");
+
+    const trigger = canvas.getByRole("button", { name: /filter by region/i });
+    await userEvent.click(trigger);
+    const option = canvas.getByRole("option", { name: "Europe" });
+    await userEvent.click(option);
 
     const lastCall = args.setCountries.mock.calls.at(-1)[0];
     await expect(lastCall).toEqual([sampleCountries[1]]);
