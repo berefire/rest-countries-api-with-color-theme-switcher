@@ -3,7 +3,7 @@
 import Attribution from './Attribution';
 
 export default {
-  title: 'Attribution',
+  title: 'Components/Attribution',
   component: Attribution,
 };
 
