@@ -42,8 +42,8 @@ This is a solution to the [REST Countries API with color theme switcher challeng
 
 Users should be able to:
 
-- See all countries from a data source on the homepage
-- Search for a country using an input field
+- See all countries from the data on the homepage
+- Search for a country using an `input` field
 - Filter countries by region
 - Click on a country to see more detailed information on a separate page
 - Click through to the border countries on the detail page
@@ -100,6 +100,7 @@ Users should be able to:
 
 **A native `<select>` can't be visually restyled beyond a certain point - matching an exact dropdown design means rebuilding it from scratch.** Browsers render a `<select>`'s open list themselves, with no CSS control over its spacing, corners, or shadow. Getting the floating panel look the design called for meant replacing it entirely with a button + custom listbox, reimplementing the accessibility a native select gives away for free - `aria-haspopup`, `aria-expanded`, `aria-activedescendant` for virtual focus, and arrow-key/Enter/Escape handling:
 
+```js
     <button
       aria-haspopup="listbox"
       aria-expanded={isOpen}
@@ -109,20 +110,27 @@ Users should be able to:
     >
       {region || "Filter by Region"}
     </button>
+```
 
 **A custom dropdown's `onClick` can silently never fire, because of event ordering.** Clicking an option in the custom listbox shifted focus away from the trigger button, which fired the wrapper's `onBlur`, which closed the dropdown - unmounting the option - before the browser's `click` event ever reached it. The fix is preventing the focus shift in the first place, on `mousedown`, not `click`:
 
+```js
     <li onMouseDown={(e) => e.preventDefault()} onClick={() => selectRegion(value)}>
+```
 
 **A mistyped Tailwind class fails completely silently.** Two separate typos cost real debugging time for the same underlying reason: `w-fullps-6` (a missing space collapsing two utilities into one meaningless token) and `pbs-6` (not a real Tailwind utility at all) both compiled to nothing, with no error - just missing width, padding, or spacing with no clue why. Unlike a JS typo, an invalid Tailwind class doesn't throw; it just quietly does nothing.
 
 **`toLocaleString()` without an explicit locale follows the visitor's own browser settings, not a fixed format.** Population numbers were rendering with a period as the thousands separator instead of a comma on some machines, because the browser's locale (not the app) decides that formatting by default. Forcing a locale fixes it for every visitor consistently:
 
+```js
     population.toLocaleString("en-US")
+```
 
 **Deploying to a GitHub Pages subpath breaks routing unless React Router is told about it explicitly.** Once Vite's `base` config was set for the project's GitHub Pages URL, the dev server started serving everything under `/rest-countries-api-with-color-theme-switcher/` - but `BrowserRouter` still assumed routes lived at the domain root, producing "No routes matched." Passing Vite's own base path straight into `basename` fixed it, and keeps the two in sync automatically if the path ever changes:
 
+```js
     <BrowserRouter basename={import.meta.env.BASE_URL}>
+```
 
 **`aria-hidden="true"` can never sit on an element that can receive keyboard focus.** A reusable `Button` component had `aria-hidden="true"` applied to the actual `<button>` itself (meant for a decorative icon inside it), which hides the button - and anything inside it - from every screen reader, sitewide. Chrome actually catches this at runtime and blocks it, logging "Blocked aria-hidden on an element because its descendant retained focus," since an element can't be both hidden from assistive tech and currently focused at the same time.
 
