@@ -73,7 +73,7 @@ Users should be able to:
 
 ### 🔗Links
 
-- Solution URL: [Add your Frontend Mentor solution URL here once submitted]
+- Solution URL: [https://www.frontendmentor.io/solutions/rest-countries-api-app-with-search-filters-and-a-dark-theme-xhppCW2UWi](https://www.frontendmentor.io/solutions/rest-countries-api-app-with-search-filters-and-a-dark-theme-xhppCW2UWi)
 - Live Site URL: [https://berefire.github.io/rest-countries-api-with-color-theme-switcher/](https://berefire.github.io/rest-countries-api-with-color-theme-switcher/)
 
 ---
