@@ -69,15 +69,19 @@ function CountryDetail({ country, borderCountries }) {
             {borderCountries.length > 0 && (
               <div className="flex flex-wrap items-center gap-4">
                 <span className="font-semibold">Border Countries:</span>
+                <ul aria-labelledby="border-countries-label" className="flex flex-wrap gap-4 list-none p-0 m-0">
                 {borderCountries.map((border) => (
+                  <li key={border.alpha3Code}>
                   <Link
                     key={border.alpha3Code}
                     to={`/country/${border.alpha3Code}`}
-                    className="px-7.5 py-1.5 md:py-0 shadow-sm bg-white dark:bg-blue-900 dark:text-white text-xs md:text-sm leading-snug md:leading-[2.25] rounded-xs"
+                    className="px-7.5 py-1.5 shadow-sm bg-white dark:bg-blue-900 dark:text-white text-xs md:text-sm leading-snug md:leading-[2.25] rounded-xs"
                   >
                     {border.name}
                   </Link>
+                </li>
                 ))}
+                </ul>
               </div>
             )}
           </div>
