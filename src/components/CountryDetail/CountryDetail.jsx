@@ -73,9 +73,8 @@ function CountryDetail({ country, borderCountries }) {
                 {borderCountries.map((border) => (
                   <li key={border.alpha3Code}>
                   <Link
-                    key={border.alpha3Code}
                     to={`/country/${border.alpha3Code}`}
-                    className="px-7.5 py-1.5 shadow-sm bg-white dark:bg-blue-900 dark:text-white text-xs md:text-sm leading-snug md:leading-[2.25] rounded-xs"
+                    className="px-7.5 py-1.5 shadow-sm bg-white dark:bg-blue-900 dark:text-white text-xs md:text-sm leading-snug md:leading-[2.25] rounded-xs hover:bg-gray-100 dark:hover:bg-blue-800"
                   >
                     {border.name}
                   </Link>
