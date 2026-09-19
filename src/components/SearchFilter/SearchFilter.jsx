@@ -83,15 +83,9 @@ function SearchFilter({ searchTerm, setSearchTerm, region, setRegion }) {
       }
     }
   }
-
-  const selectedIndex = REGIONS.indexOf(region);
-  const activeOptionId = isOpen
-    ? activeIndex >= 0
-      ? `region-option-${REGIONS[activeIndex]}`
-      : undefined
-    : selectedIndex >= 0
-      ? `region-option-${REGIONS[selectedIndex]}`
-      : undefined;
+  
+  const activeOptionId =
+  isOpen && activeIndex >= 0 ? `region-option-${REGIONS[activeIndex]}` : undefined;
 
   return (
     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-10 md:gap-2 px-4 md:px-10.25 pt-6 md:pt-12 lg:px-20.25">
