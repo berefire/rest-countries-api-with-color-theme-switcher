@@ -1,32 +1,35 @@
 /* nunito-sans-300 - latin */
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Nunito Sans';
+  font-family: "Nunito Sans";
   font-style: normal;
   font-weight: 300;
-  src: url('../assets/fonts/nunito-sans/nunito-sans-v19-latin-300.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url("../assets/fonts/nunito-sans/nunito-sans-v19-latin-300.woff2")
+    format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 /* nunito-sans-600 - latin */
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Nunito Sans';
+  font-family: "Nunito Sans";
   font-style: normal;
   font-weight: 600;
-  src: url('../assets/fonts/nunito-sans/nunito-sans-v19-latin-600.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url("../assets/fonts/nunito-sans/nunito-sans-v19-latin-600.woff2")
+    format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 /* nunito-sans-800 - latin */
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Nunito Sans';
+  font-family: "Nunito Sans";
   font-style: normal;
   font-weight: 800;
-  src: url('../assets/fonts/nunito-sans/nunito-sans-v19-latin-800.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  src: url("../assets/fonts/nunito-sans/nunito-sans-v19-latin-800.woff2")
+    format("woff2"); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
 
-  input:-webkit-autofill,
-  input:-webkit-autofill:hover,
-  input:-webkit-autofill:focus {
-    -webkit-box-shadow: 0 0 0rem 62.5rem currentColor inset;
-    -webkit-text-fill-color: currentColor;
-    transition: background-color 9999s ease-in-out 0s;
-  }
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0rem 62.5rem currentColor inset;
+  -webkit-text-fill-color: currentColor;
+  transition: background-color 9999s ease-in-out 0s;
 }
