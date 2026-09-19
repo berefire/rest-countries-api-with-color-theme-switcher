@@ -4,34 +4,17 @@ import { IoSearchOutline, IoChevronDownOutline } from "react-icons/io5";
 
 const REGIONS = ["Africa", "Americas", "Asia", "Europe", "Oceania"];
 
-function SearchFilter({ allCountries, setCountries }) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [region, setRegion] = useState("");
+function SearchFilter({ searchTerm, setSearchTerm, region, setRegion }) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1);
   const containerRef = useRef(null);
 
-  function applyFilters(nextSearchTerm, nextRegion) {
-    const filtered = allCountries.filter((country) => {
-      const matchesSearch = country.name
-        .toLowerCase()
-        .includes(nextSearchTerm.toLowerCase());
-      const matchesRegion = nextRegion === "" || country.region === nextRegion;
-      return matchesSearch && matchesRegion;
-    });
-
-    setCountries(filtered);
-  }
-
   function handleSearchChange(e) {
-    const value = e.target.value;
-    setSearchTerm(value);
-    applyFilters(value, region);
+    setSearchTerm(e.target.value);
   }
 
   function selectRegion(value) {
     setRegion(value);
-    applyFilters(searchTerm, value);
     setIsOpen(false);
   }
 
@@ -68,6 +51,12 @@ function SearchFilter({ allCountries, setCountries }) {
           );
         }
         break;
+      case "Home":
+      case "End":
+        e.preventDefault();
+        setIsOpen(true);
+        setActiveIndex(e.key === "Home" ? 0 : REGIONS.length - 1);
+        break;
       case "Enter":
       case " ":
         e.preventDefault();
@@ -80,14 +69,28 @@ function SearchFilter({ allCountries, setCountries }) {
       case "Escape":
         setIsOpen(false);
         break;
-      default:
+      default: {
+        if (e.key.length !== 1 || e.ctrlKey || e.metaKey) break;
+        const letter = e.key.toLowerCase();
+        const next = REGIONS.map(
+          (_, i) => (activeIndex + 1 + i) % REGIONS.length,
+        ).find((i) => REGIONS[i].toLowerCase().startsWith(letter));
+        if (next !== undefined) {
+          setIsOpen(true);
+          setActiveIndex(next);
+        }
         break;
+      }
     }
   }
 
-  const activeOptionId =
-    isOpen && activeIndex >= 0
+  const selectedIndex = REGIONS.indexOf(region);
+  const activeOptionId = isOpen
+    ? activeIndex >= 0
       ? `region-option-${REGIONS[activeIndex]}`
+      : undefined
+    : selectedIndex >= 0
+      ? `region-option-${REGIONS[selectedIndex]}`
       : undefined;
 
   return (
@@ -121,6 +124,7 @@ function SearchFilter({ allCountries, setCountries }) {
       >
         <button
           type="button"
+          role="combobox"
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           aria-controls="region-filter-listbox"
