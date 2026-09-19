@@ -13,7 +13,6 @@ function buildEmptyMessage(searchTerm, region) {
 function Home() {
   const {
     countries,
-    allCountries,
     searchTerm,
     setSearchTerm,
     region,
@@ -23,7 +22,6 @@ function Home() {
   return (
     <>
       <SearchFilter
-        allCountries={allCountries}
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         region={region}
