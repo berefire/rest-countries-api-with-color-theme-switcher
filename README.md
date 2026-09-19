@@ -140,8 +140,6 @@ Users should be able to:
 
 - Add Home/End key support and type-ahead (jump to an option by typing its first letter) to the custom region listbox, for full parity with the ARIA Authoring Practices listbox pattern
 - Add a "No countries match your search" message to the country list for the zero-results case
-- Fill in the Open Graph/social sharing meta tags with the real deployed URL and an `og:image` asset once live
-- Add real screenshots once the UI is finished and deployed
 
 ---
 
