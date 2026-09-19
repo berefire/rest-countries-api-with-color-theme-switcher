@@ -68,7 +68,7 @@ function CountryDetail({ country, borderCountries }) {
 
             {borderCountries.length > 0 && (
               <div className="flex flex-wrap items-center gap-4">
-                <span className="font-semibold">Border Countries:</span>
+                <span id="border-countries-label" className="font-semibold">Border Countries:</span>
                 <ul aria-labelledby="border-countries-label" className="flex flex-wrap gap-4 list-none p-0 m-0">
                 {borderCountries.map((border) => (
                   <li key={border.alpha3Code}>
