@@ -1,59 +1,54 @@
-import { expect, fn } from "storybook/test";
+import { useState } from "react";
+import { expect } from "storybook/test";
 import SearchFilter from "./SearchFilter";
 
-const sampleCountries = [
-  { name: "France", region: "Europe" },
-  { name: "Germany", region: "Europe" },
-  { name: "Canada", region: "Americas" },
-  { name: "Japan", region: "Asia" },
-  { name: "Australia", region: "Oceania" },
-];
+function SearchFilterWithState(args) {
+  const [searchTerm, setSearchTerm] = useState(args.searchTerm ?? "");
+  const [region, setRegion] = useState(args.region ?? "");
+
+  return (
+    <SearchFilter
+      searchTerm={searchTerm}
+      setSearchTerm={setSearchTerm}
+      region={region}
+      setRegion={setRegion}
+    />
+  );
+}
 
 export default {
   title: "Components/SearchFilter",
   component: SearchFilter,
-  args: {
-    allCountries: sampleCountries,
-    setCountries: fn(),
-  },
+  render: (args) => <SearchFilterWithState {...args} />,
 };
 
 export const SearchByName = {
-  play: async ({ args, canvas, userEvent }) => {
+  play: async ({ canvas, userEvent }) => {
     const searchInput = canvas.getByLabelText("Search for a country");
     await userEvent.type(searchInput, "fra");
-
-    const lastCall = args.setCountries.mock.calls.at(-1)[0];
-    await expect(lastCall).toEqual([sampleCountries[0]]);
+    await expect(searchInput).toHaveValue("fra");
   },
 };
 
 export const FilterByRegion = {
-  play: async ({ args, canvas, userEvent }) => {
-    const trigger = canvas.getByRole("button", { name: /filter by region/i });
+  play: async ({ canvas, userEvent }) => {
+    const trigger = canvas.getByRole("combobox", { name: /filter by region/i });
     await userEvent.click(trigger);
-
     const option = canvas.getByRole("option", { name: "Europe" });
     await userEvent.click(option);
-
     await expect(trigger).toHaveTextContent("Europe");
-
-    const lastCall = args.setCountries.mock.calls.at(-1)[0];
-    await expect(lastCall).toEqual([sampleCountries[0], sampleCountries[1]]);
   },
 };
 
 export const SearchAndRegionCombined = {
-  play: async ({ args, canvas, userEvent }) => {
+  play: async ({ canvas, userEvent }) => {
     const searchInput = canvas.getByLabelText("Search for a country");
     await userEvent.type(searchInput, "g");
-
-    const trigger = canvas.getByRole("button", { name: /filter by region/i });
+    const trigger = canvas.getByRole("combobox", { name: /filter by region/i });
     await userEvent.click(trigger);
     const option = canvas.getByRole("option", { name: "Europe" });
     await userEvent.click(option);
-
-    const lastCall = args.setCountries.mock.calls.at(-1)[0];
-    await expect(lastCall).toEqual([sampleCountries[1]]);
+    await expect(trigger).toHaveTextContent("Europe");
+    await expect(searchInput).toHaveValue("g");
   },
 };
