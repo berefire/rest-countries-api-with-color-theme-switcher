@@ -128,7 +128,7 @@ function SearchFilter({ searchTerm, setSearchTerm, region, setRegion }) {
           onKeyDown={handleTriggerKeyDown}
           className="w-full flex items-center justify-between gap-4 px-6 py-3 rounded-sm shadow-md bg-white dark:bg-blue-900 dark:text-white focus-ring"
         >
-          <span className="whitespace-nowrap">
+          <span className="whitespace-nowrap font-body text-[0.75rem] md:text-sm text-grey-950 dark:text-white font-normal leading-[0.2] md:leading-[1.45] lg:leading[0.2]">
             {region || "Filter by Region"}
           </span>
           <IoChevronDownOutline
@@ -153,7 +153,7 @@ function SearchFilter({ searchTerm, setSearchTerm, region, setRegion }) {
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => selectRegion(value)}
                 onMouseEnter={() => setActiveIndex(index)}
-                className={`px-6 py-2 cursor-pointer dark:text-white ${
+                className={`px-6 py-2 cursor-pointer font-body text-[0.75rem] md:text-sm leading-[0.16] md:leading-[1.45] text-grey-950 dark:text-white font-normal ${
                   index === activeIndex ? "bg-gray-100 dark:bg-blue-800" : ""
                 }`}
               >
