@@ -27,7 +27,7 @@ function Home() {
         region={region}
         setRegion={setRegion}
       />
-      <p role="status" className="px-4 md:px-10.25 lg:px-20.25 pt-4">
+      <p role="status" className="px-4 md:px-10.25 lg:px-20.25 pt-4 font-body font-semibold text-grey-950 dark:text-white leading-[1.45] text-lg">
         {countries.length === 0 ? buildEmptyMessage(searchTerm, region) : ""}
       </p>
       <div className="flex flex-col justify-content px-14 pbs-6 md:pbs-12 pbe-16.25 md:pbe-14.5  md:px-21">
