@@ -14,7 +14,7 @@ function CountryDetailPage() {
     return (
       <div className="flex justify-center">
       <div className="w-fit flex flex-col items-center gap-16 md:gap-14 lg:gap-20 pbs-10 pbe-13.5 md:pbe-16 xl:px-20.25">
-        <p className="text-sm md:text-[2rem] font-extrabold">Country not found.</p>
+        <p className="text-sm md:text-[2rem] font-extrabold text-grey-950 dark:text-white">Country not found.</p>
         <Button onClick={() => navigate("/")}>
           <BsArrowLeft className="inline-block" /> Back
         </Button>
