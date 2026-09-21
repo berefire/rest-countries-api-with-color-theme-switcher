@@ -128,7 +128,7 @@ function SearchFilter({ searchTerm, setSearchTerm, region, setRegion }) {
           onKeyDown={handleTriggerKeyDown}
           className="w-full flex items-center justify-between gap-4 px-6 py-3 rounded-sm shadow-md bg-white dark:bg-blue-900 dark:text-white focus-ring"
         >
-          <span className="whitespace-nowrap font-body text-[0.75rem] md:text-sm text-grey-950 dark:text-white font-normal leading-[0.2] md:leading-[1.45] lg:leading[0.2]">
+          <span className="whitespace-nowrap font-body text-[0.75rem] md:text-sm text-grey-950 dark:text-white font-normal leading-[0.2] md:leading-[1.45] lg:leading-[0.2]">
             {region || "Filter by Region"}
           </span>
           <IoChevronDownOutline
