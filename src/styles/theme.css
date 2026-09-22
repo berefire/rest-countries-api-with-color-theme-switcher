@@ -11,6 +11,21 @@
   --color-blue-900: hsl(209, 23%, 22%);
 
   --font-body: "Nunito Sans", sans-serif;
-
-
 }
+
+  @keyframes reveal {
+    from {
+      clip-path: circle(0% at var(--x, 50%) var(--y, 50%));
+    }
+    to {
+      clip-path: circle(150% at var(--x, 50%) var(--y, 50%));
+    }
+  }
+
+  ::view-transition-new(root) {
+    animation: reveal 0.6s ease-in-out;
+  }
+
+  ::view-transition-old(root) {
+    animation: none;
+  }
