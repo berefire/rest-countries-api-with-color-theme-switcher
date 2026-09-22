@@ -138,8 +138,12 @@ Users should be able to:
 
 ### 🚀Continued development
 
-- Add Home/End key support and type-ahead (jump to an option by typing its first letter) to the custom region listbox, for full parity with the ARIA Authoring Practices listbox pattern
-- Add a "No countries match your search" message to the country list for the zero-results case
+- **Deepen React Router usage** – extend beyond the current list → detail navigation with nested routes, per-route loading/error states, and graceful handling of an invalid country slug instead of a blank page.
+- **Expand the Context API pattern** – as the app grows (e.g. if search/filter state is added), practice splitting concerns into separate contexts rather than one large one, and get more comfortable with when Context stops being the right tool versus a lighter state library like Zustand.
+- **Add search and filtering** – search by country name, filter by region, and sort by population or alphabetically. Good practice for combining URL query params with existing Context state.
+- **Accessibility pass** – keyboard navigation through the country grid, focus management on navigation to a detail page, and re-checking color contrast in both themes now that the animated toggle is in place.
+- **Testing** – extend the existing Storybook setup with interaction tests (or add React Testing Library) for the theme toggle and card hover states.
+- **More animation polish** – apply the same View Transitions API technique already used for the theme toggle to route transitions (list → detail page) for a more cohesive feel.
 
 ---
 
