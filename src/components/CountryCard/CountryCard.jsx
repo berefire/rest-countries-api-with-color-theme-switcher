@@ -7,7 +7,7 @@ function CountryCard({ country }) {
     <li className="list-none">
     <Link
       to={`/country/${alpha3Code}`}
-      className="flex flex-col gap-5.5 bg-white dark:bg-blue-900 rounded-md shadow-md overflow-hidden hover:shadow-lg transition-shadow font-body text-grey-950 dark:text-white"
+      className="flex flex-col gap-5.5 bg-white dark:bg-blue-900 rounded-md shadow-md overflow-hidden font-body text-grey-950 dark:text-white transition-transform duration-200 hover:scale-105 hover:shadow-lg"
     >
       <img src={flags.svg} alt={`Flag of ${name}`} loading="lazy" className="w-full h-40 object-cover" />
       <div className="px-6 pbe-12">
