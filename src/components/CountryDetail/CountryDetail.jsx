@@ -47,21 +47,21 @@ function CountryDetail({ country, borderCountries }) {
                 </p>
                 <p>
                   <span className="font-semibold">Capital:</span>{" "}
-                  {capital ?? "N/A"}
+                  {capital?.length ? capital : "N/A"}
                 </p>
               </div>
               <div>
                 <p>
                   <span className="font-semibold">Top Level Domain:</span>{" "}
-                  {topLevelDomain?.join(", ")}
+                  {topLevelDomain?.length ? topLevelDomain.join(", ") : "N/A"}
                 </p>
                 <p>
                   <span className="font-semibold">Currencies:</span>{" "}
-                  {currencies?.map((c) => c.name).join(", ") ?? "N/A"}
+                  {currencies?.length ? currencies.map((c) => c.name).join(", ") : "N/A"}
                 </p>
                 <p>
                   <span className="font-semibold">Languages:</span>{" "}
-                  {languages?.map((l) => l.name).join(", ") ?? "N/A"}
+                  {languages?.length ? languages.map((l) => l.name).join(", ") : "N/A"}
                 </p>
               </div>
             </div>
