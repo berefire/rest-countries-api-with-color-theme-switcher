@@ -14,7 +14,7 @@ function CountryCard({ country }) {
         <h2 className="font-extrabold text-lg leading-[1.45] mb-4">{name}</h2>
         <p className="text-sm leading-0.1"><span className="font-semibold text-sm">Population:</span> {population.toLocaleString("en-US")}</p>
         <p className="text-sm leading-0.1"><span className="font-semibold text-sm">Region:</span> {region}</p>
-        <p className="text-sm leading-0.1"><span className="font-semibold text-sm">Capital:</span> {capital ?? "N/A"}</p>
+        <p className="text-sm leading-0.1"><span className="font-semibold text-sm">Capital:</span> {capital?.length ? capital : "N/A"}</p>
       </div>
     </Link>
     </li>
