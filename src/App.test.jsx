@@ -1,9 +1,31 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { MemoryRouter, Link } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import { ThemeProvider } from "@/context/ThemeProvider";
 import App from "./App";
+
+const mockCountries = vi.hoisted(() => [
+  {
+    name: "France", nativeName: "France", population: 67000000, region: "Europe", subregion: "Western Europe",
+    capital: "Paris", topLevelDomain: [".fr"], currencies: [{ name: "Euro" }], languages: [{ name: "French" }],
+    flags: { svg: "https://flagcdn.com/fr.svg" }, alpha3Code: "FRA", borders: ["DEU"],
+  },
+  {
+    name: "Germany", nativeName: "Deutschland", population: 83000000, region: "Europe", subregion: "Western Europe",
+    capital: "Berlin", topLevelDomain: [".de"], currencies: [{ name: "Euro" }], languages: [{ name: "German" }],
+    flags: { svg: "https://flagcdn.com/de.svg" }, alpha3Code: "DEU", borders: ["FRA"],
+  },
+  {
+    name: "Iceland", nativeName: "Ísland", population: 366000, region: "Europe", subregion: "Northern Europe",
+    capital: "Reykjavik", topLevelDomain: [".is"], currencies: [{ name: "Icelandic króna" }], languages: [{ name: "Icelandic" }],
+    flags: { svg: "https://flagcdn.com/is.svg" }, alpha3Code: "ISL", borders: [],
+  },
+]);
+
+vi.mock("@/data/data.json", () => ({
+  default: mockCountries,
+}));
 
 beforeEach(() => {
   window.matchMedia = vi.fn().mockImplementation((query) => ({
@@ -14,21 +36,6 @@ beforeEach(() => {
     dispatchEvent: vi.fn(),
   }));
 });
-
-vi.mock("@/pages/Home/Home", () => ({
-  default: () => (
-    <div>
-      Home page content
-      <input aria-label="Search" />
-      <Link to="/?q=test">Update search param</Link>
-      <Link to="/country/FRA">Go to France</Link>
-    </div>
-  ),
-}));
-
-vi.mock("@/pages/CountryDetailPage/CountryDetailPage", () => ({
-  default: () => <div>Country detail content</div>,
-}));
 
 function renderApp(initialEntry = "/") {
   return render(
@@ -48,19 +55,40 @@ describe("App", () => {
     ).toBeInTheDocument();
   });
 
-  it("renders Home at the root path", () => {
+  it("renders the real Home page at the root path, listing countries", () => {
     renderApp("/");
-    expect(screen.getByText("Home page content")).toBeInTheDocument();
+    expect(screen.getByLabelText("Search for a country")).toBeInTheDocument();
+    expect(screen.getByText("France")).toBeInTheDocument();
+    expect(screen.getByText("Germany")).toBeInTheDocument();
   });
 
-  it("renders CountryDetailPage at /country/:code", () => {
+  it("shows the empty-results message when the search matches nothing", async () => {
+    const user = userEvent.setup();
+    renderApp("/");
+
+    await user.type(screen.getByLabelText("Search for a country"), "xyz-nope");
+
+    expect(screen.getByText('No countries match "xyz-nope".')).toBeInTheDocument();
+  });
+
+  it("renders the real CountryDetailPage at /country/:code, with resolved border links", () => {
     renderApp("/country/FRA");
-    expect(screen.getByText("Country detail content")).toBeInTheDocument();
+
+    expect(screen.getByRole("heading", { name: "France" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Germany" })).toHaveAttribute("href", "/country/DEU");
   });
 
-  it("renders the RouteAnnouncer live region", () => {
+  it("shows no border country links for a country with no borders", () => {
+    renderApp("/country/ISL");
+
+    expect(screen.getByRole("heading", { name: "Iceland" })).toBeInTheDocument();
+    expect(screen.queryByText("Border Countries:")).not.toBeInTheDocument();
+  });
+
+  it("renders both the RouteAnnouncer live region and Home's status message area", () => {
     renderApp("/");
-    expect(screen.getByRole("status")).toBeInTheDocument();
+    // Home's empty-message <p> and RouteAnnouncer's live region both use role="status"
+    expect(screen.getAllByRole("status")).toHaveLength(2);
   });
 
   it("focuses the main content on initial mount", async () => {
@@ -78,10 +106,10 @@ describe("App", () => {
     main.blur();
     expect(main).not.toHaveFocus();
 
-    await user.click(screen.getByRole("link", { name: "Go to France" }));
+    await user.click(screen.getByRole("link", { name: /france/i }));
 
     await waitFor(() => expect(main).toHaveFocus());
-    expect(screen.getByText("Country detail content")).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "France" })).toBeInTheDocument();
   });
 
   it("does not steal focus away when only the search query string changes", async () => {
@@ -90,14 +118,11 @@ describe("App", () => {
     const main = screen.getByRole("main");
     await waitFor(() => expect(main).toHaveFocus());
 
-    const updateSearchLink = screen.getByRole("link", {
-      name: "Update search param",
-    });
-    await user.click(updateSearchLink);
+    const searchInput = screen.getByLabelText("Search for a country");
+    await user.click(searchInput);
+    await user.type(searchInput, "g");
 
-    // Clicking naturally moves focus to the link itself. The bug would be
-    // the effect then yanking focus back to <main> just because the query
-    // string changed, even though the route (pathname) stayed the same.
-    expect(updateSearchLink).toHaveFocus();
+    // Same route, only the query string changed — focus should stay on the input.
+    expect(searchInput).toHaveFocus();
   });
 });
