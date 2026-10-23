@@ -12,7 +12,7 @@ function App() {
 
   useEffect(() => {
     mainRef.current?.focus();
-  }, [location]);
+  }, [location.pathname]);
 
   return (
     <div className="min-h-dvh flex flex-col bg-white dark:bg-blue-950">
