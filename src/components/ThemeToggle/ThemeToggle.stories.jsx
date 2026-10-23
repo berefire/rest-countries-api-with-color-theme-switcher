@@ -1,5 +1,5 @@
 import ThemeToggle from "./ThemeToggle";
-import { ThemeProvider } from "@/context/ThemeContext";
+import { ThemeProvider } from "@/context/ThemeProvider";
 import { expect } from "storybook/test";
 
 export default {
