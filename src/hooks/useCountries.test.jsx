@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { renderHook, act } from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import { useCountries } from "./useCountries";
 
 const mockCountries = vi.hoisted(() => [
@@ -15,11 +15,23 @@ vi.mock("@/data/data.json", () => ({
 }));
 
 function renderWithRouter(initialEntry = "/") {
-  return renderHook(() => useCountries(), {
+  const locationRef = { current: undefined };
+
+  function LocationProbe() {
+    locationRef.current = useLocation();
+    return null;
+  }
+
+  const utils = renderHook(() => useCountries(), {
     wrapper: ({ children }) => (
-      <MemoryRouter initialEntries={[initialEntry]}>{children}</MemoryRouter>
+      <MemoryRouter initialEntries={[initialEntry]}>
+        <LocationProbe />
+        {children}
+      </MemoryRouter>
     ),
   });
+
+  return { ...utils, locationRef };
 }
 
 describe("useCountries", () => {
@@ -44,7 +56,10 @@ describe("useCountries", () => {
 
   it("filters by region", () => {
     const { result } = renderWithRouter("/?region=Europe");
-    expect(result.current.countries.map((c) => c.name).sort()).toEqual(["France", "Germany"]);
+    expect(result.current.countries.map((c) => c.name).sort()).toEqual([
+      "France",
+      "Germany",
+    ]);
   });
 
   it("combines search term and region filters", () => {
@@ -96,5 +111,54 @@ describe("useCountries", () => {
     expect(result.current.searchTerm).toBe("g");
     expect(result.current.region).toBe("Europe");
     expect(result.current.countries.map((c) => c.name)).toEqual(["Germany"]);
+  });
+
+  it("setSearchTerm updates the filter, persists it to the URL, and removes it when cleared", () => {
+    const { result, locationRef } = renderWithRouter("/");
+
+    act(() => result.current.setSearchTerm("fra"));
+    expect(result.current.searchTerm).toBe("fra");
+    expect(result.current.countries.map((c) => c.name)).toEqual(["France"]);
+    expect(new URLSearchParams(locationRef.current.search).get("q")).toBe(
+      "fra",
+    );
+
+    act(() => result.current.setSearchTerm(""));
+    expect(result.current.searchTerm).toBe("");
+    expect(result.current.countries).toHaveLength(4);
+    expect(new URLSearchParams(locationRef.current.search).get("q")).toBeNull();
+  });
+
+  it("setRegion updates the filter, persists it to the URL, and removes it when cleared", () => {
+    const { result, locationRef } = renderWithRouter("/");
+
+    act(() => result.current.setRegion("Africa"));
+    expect(result.current.region).toBe("Africa");
+    expect(result.current.countries.map((c) => c.name)).toEqual(["Ghana"]);
+    expect(new URLSearchParams(locationRef.current.search).get("region")).toBe(
+      "Africa",
+    );
+
+    act(() => result.current.setRegion(""));
+    expect(result.current.region).toBe("");
+    expect(result.current.countries).toHaveLength(4);
+    expect(
+      new URLSearchParams(locationRef.current.search).get("region"),
+    ).toBeNull();
+  });
+
+  it("does not clobber one param when the other is set afterward, and persists both to the URL", () => {
+    const { result, locationRef } = renderWithRouter("/");
+
+    act(() => result.current.setSearchTerm("g"));
+    act(() => result.current.setRegion("Europe"));
+
+    expect(result.current.searchTerm).toBe("g");
+    expect(result.current.region).toBe("Europe");
+    expect(result.current.countries.map((c) => c.name)).toEqual(["Germany"]);
+
+    const params = new URLSearchParams(locationRef.current.search);
+    expect(params.get("q")).toBe("g");
+    expect(params.get("region")).toBe("Europe");
   });
 });
