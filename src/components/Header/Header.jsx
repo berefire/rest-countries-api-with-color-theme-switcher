@@ -4,9 +4,12 @@ import { Link } from "react-router-dom";
 function Header() {
   return (
     <header className="flex items-center justify-between px-4 md:px-10.25 lg:px-20.25 py-7.5 lg:py-6 bg-white dark:bg-blue-900 shadow-sm dark:shadow-sm font-body">
-      <h1 className="font-extrabold leading-[1.2] lg:leading-snug text-sm lg:text-2xl text-gray-900 dark:text-white">
-        <Link to="/" className="no-underline text-inherit focus-ring" >Where in the world?</Link>
-      </h1>
+      <Link
+        to="/"
+        className="font-extrabold leading-[1.2] lg:leading-snug text-sm lg:text-2xl text-gray-900 dark:text-white no-underline focus-ring"
+      >
+        Where in the world?
+      </Link>
       <ThemeToggle />
     </header>
   );
