@@ -24,9 +24,9 @@ function CountryDetail({ country, borderCountries }) {
         />
 
         <div className="flex flex-col gap-4 md:gap-6 font-light text-sm md:text-[1rem] leading-loose">
-          <h2 className="text-2xl md:text-[2rem] font-extrabold leading-snug">
+          <h1 className="text-2xl md:text-[2rem] font-extrabold leading-snug">
             {name}
-          </h2>
+          </h1>
 
           <div className="flex flex-col gap-8 md:gap-6 lg:gap-16">
             <div className="flex flex-col md:flex-row gap-8 md:justify-between">
